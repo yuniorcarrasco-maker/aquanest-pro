@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaNest Pro — Tarjetas de Negocio v2</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #f0f4f8;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+            gap: 30px;
+        }
+        h1 {
+            font-size: 1.4rem;
+            color: #0d2d52;
+            text-align: center;
+        }
+        .subtitle {
+            color: #555;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+        .instructions {
+            background: #e8f4fd;
+            border-left: 4px solid #06b6d4;
+            padding: 14px 18px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            color: #333;
+            max-width: 700px;
+            width: 100%;
+            line-height: 1.7;
+        }
+        .cards-row {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            align-items: center;
+            width: 100%;
+        }
+        .card-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-label {
+            font-weight: 700;
+            color: #0d2d52;
+            font-size: 1rem;
+        }
+        .card-frame {
+            width: 700px;
+            height: 400px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        }
+        .card-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .print-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #1d6fbb, #06b6d4);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 36px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 24px rgba(6,182,212,0.3);
+            transition: all 0.25s;
+            text-decoration: none;
+        }
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(6,182,212,0.45);
+        }
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 8mm;
+            }
+            body {
+                background: white;
+                padding: 8mm;
+                gap: 16mm;
+            }
+            h1, .subtitle, .instructions, .print-btn, .card-label { display: none; }
+            .cards-row {
+                flex-direction: column;
+                gap: 18mm;
+                align-items: center;
+            }
+            .card-frame {
+                /* 3.5" x 2" at 96dpi screen = 336 x 192 pt for print */
+                width: 252pt;
+                height: 144pt;
+                border-radius: 8pt;
+                box-shadow: none;
+                border: 0.5pt solid #ccc;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🖨️ AquaNest Pro — Tarjetas de Negocio (Versión Corregida)</h1>
+    <p class="subtitle">Datos actualizados: dominio, email, teléfono y títulos correctos</p>
+
+    <div class="instructions">
+        <strong>📋 Cómo imprimir en PDF:</strong><br />
+        1. Presiona el botón <strong>"Imprimir / Guardar como PDF"</strong> abajo<br />
+        2. En el diálogo de impresión, selecciona <strong>"Guardar como PDF"</strong> como impresora<br />
+        3. Configura papel: <strong>A4</strong> · Sin márgenes adicionales<br />
+        4. Activa <strong>"Imprimir fondos"</strong> (Más opciones → Gráficos de fondo ✅)<br />
+        5. Lleva el PDF a tu imprenta y pide tarjetas en <strong>papel mate 16pt o superior</strong>
+    </div>
+
+    <div class="cards-row">
+        <div class="card-wrapper">
+            <div class="card-label">Yndira Nina — Analista Certificada de Agua</div>
+            <div class="card-frame">
+                <img src="images/bizcard-yndira-v2.png" alt="Tarjeta Yndira Nina" />
+            </div>
+        </div>
+        <div class="card-wrapper">
+            <div class="card-label">Yunior Carrasco — Analista Certificado de Agua</div>
+            <div class="card-frame">
+                <img src="images/bizcard-yunior-v2.png" alt="Tarjeta Yunior Carrasco" />
+            </div>
+        </div>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">
+        🖨️ Imprimir / Guardar como PDF
+    </button>
+</body>
+</html>

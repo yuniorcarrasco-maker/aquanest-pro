@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AquaNest Pro — Tarjetas de Negocio para Imprimir</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        /* ── Reset & Base ── */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #1a1a2e;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            gap: 60px;
+            color: #fff;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            color: #06b6d4;
+            text-align: center;
+            margin-bottom: 0;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 6px;
+        }
+
+        .instructions {
+            background: rgba(6,182,212,0.08);
+            border: 1px solid rgba(6,182,212,0.25);
+            border-radius: 12px;
+            padding: 16px 24px;
+            max-width: 700px;
+            font-size: 0.88rem;
+            color: #cbd5e1;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        .instructions strong { color: #06b6d4; }
+
+        /* ── Cards container ── */
+        .cards-row {
+            display: flex;
+            gap: 60px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* ── Individual card wrapper ── */
+        .card-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .card-label {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #06b6d4;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Standard business card: 3.5" x 2" = 252pt x 144pt at 72dpi */
+        /* For screen/print: 3.5 x 2 inches at 96dpi = 336 x 192px, scaled 2.5x */
+        .card-frame {
+            position: relative;
+            width:  630px;   /* 3.5in × 2.5 × 72 */
+            height: 880px;   /* portrait card */
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow:
+                0 0 0 2px rgba(6,182,212,0.4),
+                0 20px 60px rgba(0,0,0,0.6),
+                0 0 40px rgba(6,182,212,0.15);
+        }
+
+        .card-frame img.card-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* QR overlay — positioned over the placeholder "QR" box */
+        .qr-overlay {
+            position: absolute;
+            bottom: 118px;
+            right: 32px;
+            width: 110px;
+            height: 110px;
+            background: #fff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+        }
+
+        .qr-overlay canvas,
+        .qr-overlay img {
+            width: 98px !important;
+            height: 98px !important;
+        }
+
+        /* ── Print button ── */
+        .print-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #1d6fbb, #06b6d4);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 36px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 24px rgba(6,182,212,0.3);
+            transition: all 0.25s;
+            text-decoration: none;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(6,182,212,0.45);
+        }
+
+        /* ── PRINT STYLES ── */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm;
+            }
+
+            body {
+                background: white;
+                padding: 10mm;
+                gap: 20mm;
+            }
+
+            h1, .subtitle, .instructions, .print-btn, .card-label { display: none; }
+
+            .cards-row {
+                flex-direction: column;
+                gap: 20mm;
+                align-items: center;
+            }
+
+            .card-frame {
+                width: 240pt;    /* 3.5 inches at 72dpi ≈ standard business card width */
+                height: 336pt;   /* portrait */
+                page-break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+
+            .qr-overlay {
+                bottom: 46pt;
+                right: 12pt;
+                width: 44pt;
+                height: 44pt;
+                padding: 2pt;
+                border-radius: 4pt;
+            }
+
+            .qr-overlay canvas,
+            .qr-overlay img {
+                width: 40pt !important;
+                height: 40pt !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <h1>🖨️ AquaNest Pro — Tarjetas para Imprimir</h1>
+        <p class="subtitle">Dos versiones personalizadas listas para imprenta</p>
+    </div>
+
+    <div class="instructions">
+        <strong>📋 Cómo imprimir en PDF:</strong><br />
+        1. Presiona el botón <strong>"Imprimir / Guardar como PDF"</strong> abajo<br />
+        2. En el diálogo de impresión, selecciona <strong>"Guardar como PDF"</strong> como impresora<br />
+        3. Configura papel: <strong>A4</strong> · Sin márgenes adicionales<br />
+        4. Activa <strong>"Imprimir fondos"</strong> (Más opciones → Gráficos de fondo ✅)<br />
+        5. Lleva el PDF a tu imprenta y pide tarjetas en <strong>papel mate 16pt o superior</strong>
+    </div>
+
+    <!-- Cards -->
+    <div class="cards-row">
+
+        <!-- Tarjeta 1: Yndira Nina -->
+        <div class="card-wrapper">
+            <div class="card-label">Yndira Nina</div>
+            <div class="card-frame" id="card-yndira">
+                <img class="card-bg" src="images/bizcard-yndira.png" alt="Tarjeta Yndira Nina" />
+                <div class="qr-overlay" id="qr-yndira"></div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 2: Yunior Carrasco -->
+        <div class="card-wrapper">
+            <div class="card-label">Yunior Carrasco</div>
+            <div class="card-frame" id="card-yunior">
+                <img class="card-bg" src="images/bizcard-yunior.png" alt="Tarjeta Yunior Carrasco" />
+                <div class="qr-overlay" id="qr-yunior"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Print Button -->
+    <button class="print-btn" onclick="window.print()">
+        🖨️ Imprimir / Guardar como PDF
+    </button>
+
+    <!-- QR Generation -->
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            var qrOptions = {
+                text: 'https://www.aquanest-pro.com',
+                width: 98,
+                height: 98,
+                colorDark: '#0d2d52',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            };
+
+            new QRCode(document.getElementById('qr-yndira'), qrOptions);
+            new QRCode(document.getElementById('qr-yunior'), qrOptions);
+        });
+    </script>
+
+</body>
+</html>
