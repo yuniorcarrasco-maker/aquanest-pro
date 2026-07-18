@@ -529,29 +529,24 @@
             es: 'Cientos de familias confían en AquaNest Pro. Estas son sus historias.',
             en: 'Hundreds of families trust AquaNest Pro. These are their stories.'
         },
+        /* Real Google review (Jorge Luis) — keep es identical to the HTML */
         '.testimonial-card:nth-child(1) .testimonial-text': {
-            es: '"Desde que instalaron el sistema de AquaNest Pro, el agua de mi casa sabe increíble. Mis hijos dejaron de comprar agua embotellada. La instalación fue rápida y profesional. ¡Totalmente recomendado!"',
-            en: '"Since AquaNest Pro installed the system, the water in my house tastes incredible. My kids stopped buying bottled water. The installation was fast and professional. Totally recommended!"'
+            es: '"Excelente servicio desde el primer día. El equipo de AquaNest Pro vino a hacer el análisis de agua gratis y me explicaron todo claramente. La instalación fue en un solo día y la diferencia en el agua es notable. Totalmente recomendado."',
+            en: '"Excellent service from day one. The AquaNest Pro team came to do the free water analysis and explained everything clearly. The installation took a single day and the difference in the water is remarkable. Totally recommended."'
         },
-        '.testimonial-card:nth-child(2) .testimonial-text': {
-            es: '"Teníamos un problema terrible con el hierro en nuestra agua de pozo. Manchaba todo. AquaNest Pro vino, analizó el agua gratis y nos instaló un sistema que eliminó el problema por completo. Excelente servicio."',
-            en: '"We had a terrible problem with iron in our well water. It stained everything. AquaNest Pro came, analyzed the water for free and installed a system that completely eliminated the problem. Excellent service."'
+        '.testimonial-slot .slot-label': {
+            es: '¿Ya instalaste tu sistema?', en: 'Already installed your system?'
         },
-        '.testimonial-card:nth-child(3) .testimonial-text': {
-            es: '"Lo que más me gustó fue la transparencia. El técnico vino personalmente, me explicó todo sin presión y me dio una cotización justa. La instalación fue en un día. El agua ahora es perfecta."',
-            en: '"What I liked most was the transparency. The technician came personally, explained everything without pressure and gave me a fair quote. Installation was done in one day. The water is now perfect."'
+        '.testimonial-slot .slot-sub': {
+            es: 'Tu reseña ayuda a otras familias a tomar la mejor decisión para su hogar.',
+            en: 'Your review helps other families make the best decision for their home.'
         },
-        '.testimonial-card:nth-child(4) .testimonial-text': {
-            es: '"Comparé con Culligan y otras empresas grandes. AquaNest Pro me dio mejor valor, mejor garantía y un trato mucho más personal. El sistema sigue funcionando perfecto."',
-            en: '"I compared with Culligan and other big companies. AquaNest Pro gave me better value, better warranty and a much more personal treatment. The system is still working perfectly."'
+        '.testimonial-slot-coming .slot-label': {
+            es: 'Próximo testimonio', en: 'Next testimonial'
         },
-        '.testimonial-card:nth-child(5) .testimonial-text': {
-            es: '"El olor a huevo podrido de nuestra agua de pozo era insoportable. AquaNest Pro instaló un sistema con filtro de azufre y UV. Ahora el agua es cristalina y sin olor. Increíble diferencia."',
-            en: '"The rotten egg smell from our well water was unbearable. AquaNest Pro installed a system with sulfur filter and UV. Now the water is crystal clear and odorless. Incredible difference."'
-        },
-        '.testimonial-card:nth-child(6) .testimonial-text': {
-            es: '"Somos una familia de 6 y gastábamos mucho en agua embotellada cada mes. Con AquaNest Pro ahorramos significativamente y el agua sabe mejor que la embotellada. Mejor inversión que hemos hecho."',
-            en: '"We\'re a family of 6 and we used to spend a lot on bottled water every month. With AquaNest Pro we save significantly and the water tastes better than bottled. Best investment we\'ve ever made."'
+        '.testimonial-slot-coming .slot-sub': {
+            es: 'Más familias están transformando su agua con AquaNest Pro. Sus historias llegan pronto.',
+            en: 'More families are transforming their water with AquaNest Pro. Their stories are coming soon.'
         },
 
         /* ── FAQ ── */
@@ -982,8 +977,6 @@
 
         /* Purifier Diagram Section */
         'purifier_chip':        { es: 'Tecnología de Filtración', en: 'Filtration Technology' },
-        'purifier_title':       { es: '6 Etapas de<br /><span class="text-gradient">Purificación Total</span>', en: '6 Stages of<br /><span class="text-gradient">Total Purification</span>', html: true },
-        'purifier_subtitle':    { es: 'Nuestro sistema elimina hasta el 99.9% de contaminantes en 6 etapas progresivas, dejando tu agua cristalina, suave y segura para toda la familia.', en: 'Our system eliminates up to 99.9% of contaminants in 6 progressive stages, leaving your water crystal clear, soft, and safe for the whole family.' },
         'purifier_step1_title': { es: 'Grava — Clarifica', en: 'Gravel — Clarifies' },
         'purifier_step1_desc':  { es: 'Primera barrera de filtración. Elimina partículas grandes, sedimentos y turbidez visible del agua.', en: 'First filtration barrier. Removes large particles, sediments, and visible turbidity from the water.' },
         'purifier_step2_title': { es: 'Garnet — Refina', en: 'Garnet — Refines' },
@@ -1017,7 +1010,35 @@
         'osmosis_7_title':      { es: '7 Etapas — Total', en: '7 Stages — Total' },
         'osmosis_7_desc':       { es: 'Incluye lámpara UV para desinfección total. Máxima seguridad para toda la familia.', en: 'Includes UV lamp for total disinfection. Maximum safety for the whole family.' },
         'osmosis_tagline':      { es: 'Agua pura directo del grifo: máxima seguridad en cada gota', en: 'Pure water straight from the tap: maximum safety in every drop' },
-        'osmosis_cta':          { es: 'Quiero Agua Pura en Mi Hogar', en: 'I Want Pure Water in My Home' }
+        'osmosis_cta':          { es: 'Quiero Agua Pura en Mi Hogar', en: 'I Want Pure Water in My Home' },
+
+        /* Warranty / stats mentions across sections */
+        'pill_warranty':        { es: 'Garantía Extendida', en: 'Extended Warranty' },
+        'ticker_warranty':      { es: 'Garantía Extendida', en: 'Extended Warranty' },
+        'stat_exp':             { es: 'Amplia', en: 'Extensive' },
+        'stat_exp_label':       { es: 'Experiencia en la Industria', en: 'Industry Experience' },
+        'why_warranty':         { es: 'Garantía Extendida', en: 'Extended Warranty' },
+        'why_warranty_desc':    { es: 'La garantía más larga de la industria. Si algo falla, lo reparamos o reemplazamos sin costo. Así de seguros estamos de nuestros sistemas.', en: 'The longest warranty in the industry. If something fails, we repair or replace it at no cost. That\'s how confident we are in our systems.' },
+        'comp_warranty_std':    { es: 'Estándar', en: 'Standard' },
+        'comp_warranty_ext':    { es: 'Extendida', en: 'Extended' },
+        'comp_warranty_ext2':   { es: 'Extendida', en: 'Extended' },
+        'cert_warranty_title':  { es: 'Garantía Extendida', en: 'Extended Warranty' },
+        'cert_warranty_desc':   { es: 'La garantía más larga de la industria en nuestros sistemas premium. Si falla, lo reparamos gratis.', en: 'The longest warranty in the industry on our premium systems. If it fails, we fix it for free.' },
+        'about_stat_exp':       { es: 'Amplia', en: 'Extensive' },
+        'about_stat_exp_text':  { es: 'Experiencia en la industria del agua', en: 'Experience in the water industry' },
+
+        /* Quiz budget options */
+        'quiz_budget_basic':    { es: 'Básico', en: 'Basic' },
+        'quiz_budget_mid':      { es: 'Intermedio', en: 'Mid-range' },
+        'quiz_budget_prem':     { es: 'Premium', en: 'Premium' },
+
+        /* Calculator note */
+        'calc_note':            { es: '* El ahorro real puede variar según el consumo y tipo de agua embotellada. Contáctanos para una estimación personalizada.', en: '* Actual savings may vary depending on consumption and type of bottled water. Contact us for a personalized estimate.' },
+
+        /* FAQ answers */
+        'faq_price_answer':     { es: 'Cada hogar es diferente, por eso ofrecemos cotizaciones personalizadas y gratuitas. El costo depende de tu fuente de agua, los contaminantes presentes, el tamaño de tu casa y tus necesidades específicas. Contáctanos para una evaluación sin compromiso y te presentaremos las mejores opciones para tu presupuesto.', en: 'Every home is different, which is why we offer free personalized quotes. The cost depends on your water source, the contaminants present, the size of your home and your specific needs. Contact us for a no-obligation evaluation and we\'ll present the best options for your budget.' },
+        'faq_savings_answer':   { es: 'Las familias que dejan de comprar agua embotellada ahorran significativamente cada año. Con un sistema AquaNest Pro, tu costo anual de agua purificada se reduce drásticamente. En la mayoría de los casos, el sistema se paga solo rápidamente. Usa nuestra <a href="#calculadora">Calculadora de Ahorro</a> para ver tu ahorro personalizado.', en: 'Families who stop buying bottled water save significantly every year. With an AquaNest Pro system, your annual purified water cost drops dramatically. In most cases, the system quickly pays for itself. Use our <a href="#calculadora">Savings Calculator</a> to see your personalized savings.', html: true },
+        'faq_financing_answer': { es: 'Sí, ofrecemos opciones de pago flexibles para que puedas invertir en agua pura sin estrés. Pregunta por nuestros planes cuando solicites tu cotización gratuita. Nuestro objetivo es que tu familia tenga agua segura.', en: 'Yes, we offer flexible payment options so you can invest in pure water without stress. Ask about our plans when you request your free quote. Our goal is for your family to have safe water.' }
     };
 
     /* ── Create Language Toggle Button ── */
@@ -1044,66 +1065,9 @@
         }
     }
 
-    /* ── Override quiz result generation for bilingual ── */
-    function patchQuizResults() {
-        // We'll override the generateQuizResult function by re-attaching to quiz options
-        const resultCard = document.getElementById('quiz-result-card');
-        if (!resultCard) return;
-
-        // Store original quiz data reference
-        const originalGenerate = window._aquanestQuizGenerate;
-
-        // Create our own generate function
-        window._aquanestQuizGenerateBilingual = function (quizData) {
-            const lang = currentLang;
-            const tr = QUIZ_RESULTS[lang];
-            let systemName, systemDesc, features;
-
-            if (quizData.waterSource === 'pozo') {
-                systemName = tr.well.name;
-                systemDesc = tr.well.desc;
-                features = [...tr.well.features];
-                if (quizData.problems && quizData.problems.includes('huevo')) {
-                    features.push(tr.well.sulfur);
-                }
-            } else {
-                if (quizData.budget === 'basico') {
-                    systemName = tr.basic.name;
-                    systemDesc = tr.basic.desc;
-                    features = [...tr.basic.features];
-                } else {
-                    systemName = tr.premium.name;
-                    systemDesc = tr.premium.desc;
-                    features = [...tr.premium.features];
-                }
-            }
-
-            if (quizData.houseSize === '5+') {
-                features.push(tr.largeHome);
-            }
-            if (quizData.problems && quizData.problems.includes('dureza')) {
-                features.push(tr.softener);
-            }
-
-            const sizeText = tr.sizes[quizData.houseSize] || quizData.houseSize;
-            const sourceText = tr.sources[quizData.waterSource] || quizData.waterSource;
-
-            resultCard.innerHTML = `
-                <h4>${systemName}</h4>
-                <p>${systemDesc}</p>
-                <ul>${features.map(f => `<li>${f}</li>`).join('')}</ul>
-                <p style="margin-top:1rem;font-size:0.85rem;color:var(--cyan);">
-                    <strong>${tr.sizeLabel}:</strong> ${sizeText} · 
-                    <strong>${tr.sourceLabel}:</strong> ${sourceText}
-                </p>
-            `;
-        };
-    }
-
     /* ── Initialize ── */
     function init() {
         createToggle();
-        patchQuizResults();
         // Apply saved language (or default Spanish)
         if (currentLang !== 'es') {
             applyLang(currentLang);
@@ -1117,12 +1081,16 @@
         init();
     }
 
-    // Expose for quiz integration
+    // Expose for quiz integration and integrity tests
     window.aquanestI18n = {
         getLang: () => currentLang,
         applyLang: applyLang,
         QUIZ_RESULTS: QUIZ_RESULTS,
-        QUIZ_PROGRESS: QUIZ_PROGRESS
+        QUIZ_PROGRESS: QUIZ_PROGRESS,
+        T: T,
+        PLACEHOLDERS: PLACEHOLDERS,
+        SELECT_OPTIONS: SELECT_OPTIONS,
+        DATA_I18N: DATA_I18N
     };
 
 })();
