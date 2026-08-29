@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Validate email format
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+            if (!window.AquaNestLogic.isValidEmail(email.value)) {
                 email.classList.add('invalid');
                 msgError.textContent = 'Ingresa un correo electrónico válido.';
                 msgError.style.display = 'block';
@@ -205,19 +205,24 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.classList.add('loading');
 
             // Build payload
-            const payload = {
-                nombre: nombre.value.trim(),
-                email: email.value.trim(),
-                telefono: telefono.value.trim(),
-                tipo_agua: tipoAgua.value,
+            const payload = window.AquaNestLogic.buildLeadPayload({
+                nombre: nombre.value,
+                email: email.value,
+                telefono: telefono.value,
+                tipoAgua: tipoAgua.value,
                 servicio: servicio.value,
-                mensaje: mensaje.value.trim(),
-                source: 'website-aquanestpro',
-                timestamp: new Date().toISOString()
-            };
+                mensaje: mensaje.value
+            });
+
+            // window.AQUANEST_CONFIG.webhookUrl overrides the baked-in constant
+            const webhookUrl = (window.AQUANEST_CONFIG && window.AQUANEST_CONFIG.webhookUrl) || N8N_WEBHOOK_URL;
 
             try {
-                const res = await fetch(N8N_WEBHOOK_URL, {
+                if (window.AquaNestLogic.isPlaceholderWebhook(webhookUrl)) {
+                    throw new Error('N8N_WEBHOOK_URL is not configured (still the placeholder)');
+                }
+
+                const res = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -389,33 +394,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const lang = (window.aquanestI18n && window.aquanestI18n.getLang) ? window.aquanestI18n.getLang() : 'es';
             const tr = (window.aquanestI18n && window.aquanestI18n.QUIZ_RESULTS) ? window.aquanestI18n.QUIZ_RESULTS[lang] : null;
 
-            let systemName = '';
-            let systemDesc = '';
-            let features = [];
+            const { systemName, systemDesc, features } =
+                window.AquaNestLogic.recommendSystem(quizData, tr || window.AquaNestLogic.QUIZ_FALLBACK_ES);
 
             if (tr) {
-                // Bilingual path
-                if (quizData.waterSource === 'pozo') {
-                    systemName = tr.well.name;
-                    systemDesc = tr.well.desc;
-                    features = [...tr.well.features];
-                    if (quizData.problems.includes('huevo')) {
-                        features.push(tr.well.sulfur);
-                    }
-                } else {
-                    if (quizData.budget === 'basico') {
-                        systemName = tr.basic.name;
-                        systemDesc = tr.basic.desc;
-                        features = [...tr.basic.features];
-                    } else {
-                        systemName = tr.premium.name;
-                        systemDesc = tr.premium.desc;
-                        features = [...tr.premium.features];
-                    }
-                }
-                if (quizData.houseSize === '5+') features.push(tr.largeHome);
-                if (quizData.problems.includes('dureza')) features.push(tr.softener);
-
                 const sizeText = tr.sizes[quizData.houseSize] || quizData.houseSize;
                 const sourceText = tr.sources[quizData.waterSource] || quizData.waterSource;
 
@@ -424,27 +406,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>${systemDesc}</p>
                     <ul>${features.map(f => `<li>${f}</li>`).join('')}</ul>
                     <p style="margin-top:1rem;font-size:0.85rem;color:var(--cyan);">
-                        <strong>${tr.sizeLabel}:</strong> ${sizeText} · 
+                        <strong>${tr.sizeLabel}:</strong> ${sizeText} ·
                         <strong>${tr.sourceLabel}:</strong> ${sourceText}
                     </p>
                 `;
             } else {
-                // Fallback Spanish
-                if (quizData.waterSource === 'pozo') {
-                    systemName = 'Sistema de Purificación para Agua de Pozo';
-                    systemDesc = 'Basado en tus respuestas, necesitas un sistema especializado para agua de pozo.';
-                    features = ['Pre-filtro de sedimentos', 'Filtro de hierro y manganeso', 'Desinfección UV', 'Suavizador de agua', 'Filtro de carbón activado'];
-                } else if (quizData.budget === 'basico') {
-                    systemName = 'Sistema Básico para Agua de Ciudad';
-                    systemDesc = 'Un sistema efectivo que elimina cloro, sedimentos y mejora el sabor de tu agua.';
-                    features = ['Filtro de sedimentos 5μ', 'Carbón activado granular', 'Filtro de carbón de bloque', 'Caudal hasta 10 GPM'];
-                } else {
-                    systemName = 'Sistema Premium para Agua de Ciudad';
-                    systemDesc = 'El sistema más completo para agua municipal con osmosis inversa.';
-                    features = ['Filtro de sedimentos 5μ', 'Carbón activado granular', 'Filtro de carbón de bloque', 'Osmosis inversa', 'Desinfección UV', 'Caudal hasta 15 GPM', 'Eliminación de PFAS'];
-                }
-                if (quizData.houseSize === '5+') features.push('Configuración de alto caudal');
-                if (quizData.problems.includes('dureza')) features.push('Suavizador de agua incluido');
                 resultCard.innerHTML = `<h4>${systemName}</h4><p>${systemDesc}</p><ul>${features.map(f => `<li>${f}</li>`).join('')}</ul>`;
             }
         }
@@ -488,16 +454,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (calcBottlesVal) calcBottlesVal.textContent = bottles;
             if (calcPriceVal) calcPriceVal.textContent = '$' + price.toFixed(2);
 
-            // Calculate
-            const weeklyBottles = people * bottles;
-            const annualBottles = weeklyBottles * 52;
-            const annualCost = annualBottles * price;
-            const systemCost = 1500; // Average system cost
-            const fiveYearSavings = (annualCost * 5) - systemCost;
+            const { annualBottles, annualCost, fiveYearSavings } =
+                window.AquaNestLogic.computeSavings(people, bottles, price);
 
             // Update results with animation
             if (calcAnnual) calcAnnual.textContent = '$' + Math.round(annualCost).toLocaleString('en-US');
-            if (calc5Year) calc5Year.textContent = '$' + Math.round(Math.max(0, fiveYearSavings)).toLocaleString('en-US');
+            if (calc5Year) calc5Year.textContent = '$' + Math.round(fiveYearSavings).toLocaleString('en-US');
             if (calcPlastic) calcPlastic.textContent = annualBottles.toLocaleString('en-US');
         }
 
