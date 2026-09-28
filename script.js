@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateNavbar() {
+        if (!navbar) return;
+
         // Scroll effect
         navbar.classList.toggle('scrolled', window.scrollY > 50);
 
@@ -150,6 +152,240 @@ document.addEventListener('DOMContentLoaded', () => {
             window.scrollTo({ top, behavior: 'smooth' });
         });
     });
+
+    /* ══════════════════════════════════════════
+       6.5. Quiz and Calculator Leads → WhatsApp
+       ══════════════════════════════════════════ */
+    const whatsappLeadUrl = 'https://wa.me/19292592538';
+    const getLeadLanguage = () => document.documentElement.lang.toLowerCase().startsWith('es') ? 'es' : 'en';
+
+    function openLeadWhatsApp(source, message) {
+        const language = getLeadLanguage();
+        if (typeof window.gtag === 'function') {
+            window.gtag('event', 'aquanest_whatsapp_interaction', {
+                event_category: 'whatsapp',
+                interaction: 'direct_open',
+                source,
+                page_language: language,
+                page_path: window.location.pathname,
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        const url = `${whatsappLeadUrl}?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank', 'noopener,noreferrer');
+        return url;
+    }
+
+    function createInlineLeadForm(source, baseMessage = '') {
+        const isSpanish = getLeadLanguage() === 'es';
+        const form = document.createElement('form');
+        form.className = 'lead-form wa-native-capture';
+        form.noValidate = true;
+        form.dataset.source = source;
+        form.dataset.baseMessage = baseMessage;
+
+        const grid = document.createElement('div');
+        grid.className = 'lead-form-grid';
+        const nameLabel = document.createElement('label');
+        nameLabel.append(isSpanish ? 'Nombre' : 'Name');
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.autocomplete = 'name';
+        nameInput.maxLength = 60;
+        nameInput.required = true;
+        nameLabel.append(nameInput);
+
+        const phoneLabel = document.createElement('label');
+        phoneLabel.append(isSpanish ? 'Teléfono (WhatsApp)' : 'Phone (WhatsApp)');
+        const phoneInput = document.createElement('input');
+        phoneInput.type = 'tel';
+        phoneInput.autocomplete = 'tel';
+        phoneInput.inputMode = 'tel';
+        phoneInput.maxLength = 24;
+        phoneInput.required = true;
+        phoneLabel.append(phoneInput);
+        grid.append(nameLabel, phoneLabel);
+
+        const actions = document.createElement('div');
+        actions.className = 'lead-form-actions';
+        const submit = document.createElement('button');
+        submit.className = 'button button-gold';
+        submit.type = 'submit';
+        submit.textContent = isSpanish ? 'Enviar por WhatsApp' : 'Send via WhatsApp';
+        actions.append(submit);
+        form.append(grid, actions);
+        return form;
+    }
+
+    function showLeadConfirmation(form, url) {
+        const isSpanish = getLeadLanguage() === 'es';
+        const confirmation = document.createElement('div');
+        confirmation.className = 'lead-form wa-native-confirmation';
+        confirmation.setAttribute('role', 'status');
+
+        const message = document.createElement('p');
+        message.className = 'lead-privacy';
+        message.textContent = isSpanish
+            ? 'Listo. WhatsApp se abrió con su información. Si no se abrió, continúe desde aquí.'
+            : 'Done. WhatsApp opened with your details. If it did not open, continue here.';
+
+        const actions = document.createElement('div');
+        actions.className = 'lead-form-actions';
+        const link = document.createElement('a');
+        link.className = 'button button-gold';
+        link.href = url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = isSpanish ? 'Continuar en WhatsApp' : 'Continue in WhatsApp';
+        actions.append(link);
+        confirmation.append(message, actions);
+        form.replaceWith(confirmation);
+    }
+
+    function ensureQuizLeadForm() {
+        const result = document.querySelector('.quiz-result');
+        if (!result || result.querySelector('.wa-native-capture, .quiz-lead-form, .wa-native-confirmation')) return;
+
+        const cta = result.querySelector('a[href*="wa.me"]');
+        let baseMessage = '';
+        if (cta) {
+            try {
+                baseMessage = new URL(cta.href).searchParams.get('text') || '';
+                cta.hidden = true;
+            } catch (error) {
+                console.warn('[AquaNest] Could not read quiz WhatsApp context:', error);
+            }
+        }
+
+        const form = createInlineLeadForm('quiz_result', baseMessage);
+        const restart = result.querySelector('.restart-button');
+        result.insertBefore(form, restart || null);
+    }
+
+    function ensureCalculatorLeadForm() {
+        const calculator = document.querySelector('.calculator-card');
+        if (!calculator || calculator.querySelector('.wa-native-capture, .calculator-lead-form, .wa-native-confirmation')) return;
+
+        const isSpanish = getLeadLanguage() === 'es';
+        const section = document.createElement('div');
+        section.className = 'calculator-lead';
+        const heading = document.createElement('h3');
+        heading.textContent = isSpanish ? 'Reciba este cálculo por WhatsApp' : 'Get this estimate on WhatsApp';
+        const description = document.createElement('p');
+        description.textContent = isSpanish
+            ? 'Le enviamos su estimado de ahorro y coordinamos su análisis de agua gratuito.'
+            : 'We will send your savings estimate and arrange your complimentary water assessment.';
+        section.append(heading, description, createInlineLeadForm('calculator'));
+
+        const note = calculator.querySelector('.calculator-note');
+        calculator.insertBefore(section, note || null);
+    }
+
+    function updateNativeLeadLanguage() {
+        const isSpanish = getLeadLanguage() === 'es';
+
+        document.querySelectorAll('.wa-native-capture').forEach(form => {
+            const labels = form.querySelectorAll('.lead-form-grid label');
+            const nameLabel = isSpanish ? 'Nombre' : 'Name';
+            const phoneLabel = isSpanish ? 'Teléfono (WhatsApp)' : 'Phone (WhatsApp)';
+            if (labels[0]?.firstChild && labels[0].firstChild.textContent.trim() !== nameLabel) {
+                labels[0].firstChild.textContent = nameLabel;
+            }
+            if (labels[1]?.firstChild && labels[1].firstChild.textContent.trim() !== phoneLabel) {
+                labels[1].firstChild.textContent = phoneLabel;
+            }
+
+            const submit = form.querySelector('button[type="submit"]');
+            const submitLabel = isSpanish ? 'Enviar por WhatsApp' : 'Send via WhatsApp';
+            if (submit && submit.textContent !== submitLabel) submit.textContent = submitLabel;
+        });
+
+        document.querySelectorAll('.calculator-lead').forEach(section => {
+            const heading = section.querySelector('h3');
+            const description = section.querySelector('p');
+            const headingText = isSpanish ? 'Reciba este cálculo por WhatsApp' : 'Get this estimate on WhatsApp';
+            const descriptionText = isSpanish
+                ? 'Le enviamos su estimado de ahorro y coordinamos su análisis de agua gratuito.'
+                : 'We will send your savings estimate and arrange your complimentary water assessment.';
+            if (heading && heading.textContent !== headingText) heading.textContent = headingText;
+            if (description && description.textContent !== descriptionText) {
+                description.textContent = descriptionText;
+            }
+        });
+
+        document.querySelectorAll('.wa-native-confirmation').forEach(confirmation => {
+            const message = confirmation.querySelector('.lead-privacy');
+            const link = confirmation.querySelector('.lead-form-actions a');
+            const messageText = isSpanish
+                ? 'Listo. WhatsApp se abrió con su información. Si no se abrió, continúe desde aquí.'
+                : 'Done. WhatsApp opened with your details. If it did not open, continue here.';
+            const linkText = isSpanish ? 'Continuar en WhatsApp' : 'Continue in WhatsApp';
+            if (message && message.textContent !== messageText) message.textContent = messageText;
+            if (link && link.textContent !== linkText) link.textContent = linkText;
+        });
+    }
+
+    function syncNativeLeadForms() {
+        ensureQuizLeadForm();
+        ensureCalculatorLeadForm();
+        updateNativeLeadLanguage();
+    }
+
+    syncNativeLeadForms();
+    const leadFormObserver = new MutationObserver(syncNativeLeadForms);
+    const appRoot = document.getElementById('root');
+    if (appRoot) leadFormObserver.observe(appRoot, { childList: true, subtree: true });
+    const languageObserver = new MutationObserver(syncNativeLeadForms);
+    languageObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+
+    document.addEventListener('submit', event => {
+        const form = event.target;
+        if (!(form instanceof HTMLFormElement)) return;
+
+        const isNativeCapture = form.classList.contains('wa-native-capture');
+        const isContactLead = form.matches('.lead-form') && !isNativeCapture;
+        if (!isNativeCapture && !isContactLead) return;
+
+        const fields = [...form.querySelectorAll('input, select, textarea')];
+        const values = fields.map(field => field.value.trim());
+        const name = values[0] || '';
+        const phone = values[1] || '';
+        if (name.length <= 1 || phone.replace(/\D/g, '').length < 7) return;
+
+        const isSpanish = getLeadLanguage() === 'es';
+        let message;
+        let source;
+
+        if (isNativeCapture && form.dataset.source === 'quiz_result') {
+            source = 'quiz_result';
+            const baseMessage = form.dataset.baseMessage || (isSpanish
+                ? 'Hola AquaNest Pro, completé la guía de sistema y quiero coordinar mi análisis de agua gratis.'
+                : 'Hello AquaNest Pro, I completed the system guide and would like to arrange my complimentary water assessment.');
+            message = `${baseMessage} ${isSpanish ? 'Nombre' : 'Name'}: ${name}; ${isSpanish ? 'Teléfono' : 'Phone'}: ${phone}.`;
+        } else if (isNativeCapture) {
+            source = 'calculator';
+            const values = form.closest('.calculator-card')?.querySelectorAll('.calculator-results > div strong');
+            const annualSpend = values?.[0]?.textContent.trim() || '';
+            const annualBottles = values?.[2]?.textContent.trim() || '';
+            message = isSpanish
+                ? `Hola AquaNest Pro, usé la calculadora de ahorro. Nombre: ${name}; Teléfono: ${phone}; Gasto anual estimado en botellas: ${annualSpend} (${annualBottles} botellas/año). Quiero conocer una solución.`
+                : `Hello AquaNest Pro, I used the savings calculator. Name: ${name}; Phone: ${phone}; Estimated annual bottled-water spend: ${annualSpend} (${annualBottles} bottles/year). I'd like to discuss a solution.`;
+        } else {
+            source = 'lead_form';
+            const [email, state, waterSource, service, notes] = values.slice(2);
+            message = isSpanish
+                ? `Hola AquaNest Pro, quiero coordinar una evaluación de agua. Nombre: ${name}; Teléfono: ${phone}; Email: ${email}; Estado: ${state}; Fuente de agua: ${waterSource}; Interés: ${service}; Detalles: ${notes || 'no indicados'}.`
+                : `Hello AquaNest Pro, I would like to arrange a water assessment. Name: ${name}; Phone: ${phone}; Email: ${email}; State: ${state}; Water source: ${waterSource}; Interest: ${service}; Details: ${notes || 'not provided'}.`;
+
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !state || !waterSource || !service) return;
+        }
+
+        const url = openLeadWhatsApp(source, message);
+        event.preventDefault();
+        event.stopPropagation();
+        showLeadConfirmation(form, url);
+    }, true);
 
     /* ══════════════════════════════════════════
        7. Contact Form → n8n Webhook
